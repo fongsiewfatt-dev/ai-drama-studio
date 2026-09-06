@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 剧作工作室</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Segoe UI",sans-serif;background:linear-gradient(135deg,#1a1a2e,#16213e);color:#fff;min-height:100vh}
+.container{max-width:800px;margin:0 auto;padding:40px 20px}
+header{text-align:center;margin-bottom:40px}
+header h1{font-size:36px;background:linear-gradient(90deg,#ffd700,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.subtitle{color:#aaa;margin-top:8px}
+.card{background:rgba(255,255,255,.06);border-radius:16px;padding:30px;border:1px solid rgba(255,255,255,.1)}
+label{display:block;margin:20px 0 8px;color:#ffd700;font-weight:600}
+input,textarea{width:100%;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(0,0,0,.3);color:#fff;font-size:15px;outline:none}
+input:focus,textarea:focus{border-color:#ffd700}
+button{width:100%;margin-top:24px;padding:14px;font-size:17px;font-weight:bold;border-radius:10px;border:none;background:linear-gradient(90deg,#ffd700,#ff8c00);color:#000;cursor:pointer}
+button:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,200,0,.35)}
+.result-box{margin-top:28px;padding:20px;background:rgba(0,0,0,.35);border-radius:12px;border:1px solid #ffd70050;display:none}
+.result-box h3{color:#ffd700;margin-bottom:12px}
+#resultContent{line-height:1.8;color:#eee;white-space:pre-wrap}
+#saveBtn{background:linear-gradient(90deg,#2ecc71,#27ae60);margin-top:16px}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>🎬 AI 剧作工作室</h1>
+    <p class="subtitle">AI Drama Studio · 智能剧本创作平台</p>
+  </header>
+  <div class="card">
+    <label>📝 项目名称</label>
+    <input type="text" id="projectName" placeholder="例如：家庭温情短剧">
+    <label>💡 创作需求</label>
+    <textarea id="prompt" rows="8" placeholder="输入故事设定、人物、风格、集数..."></textarea>
+    <button id="generateBtn">✨ 一键生成剧本</button>
+    <div id="resultBox" class="result-box">
+      <h3>📄 生成结果</h3>
+      <div id="resultContent"></div>
+      <button id="saveBtn">💾 保存到本地</button>
+    </div>
+  </div>
+</div>
+<script>
+const g=document.getElementById('generateBtn'),s=document.getElementById('saveBtn'),r=document.getElementById('resultBox'),c=document.getElementById('resultContent'),p=document.getElementById('projectName'),t=document.getElementById('prompt');
+g.onclick=()=>{
+  if(!p.value.trim()||!t.value.trim())return alert('请填写项目名称和需求～');
+  g.innerText='⏳ 生成中...';g.disabled=true;
+  setTimeout(()=>{
+    c.innerText=`【剧本名称】${p.value}\n【创作设定】${t.value}\n\n━━━━━━━━━━━━━━\n📌 第一幕 · 开端\n场景：... 人物：... 剧情：...\n\n📌 第二幕 · 发展\n冲突升级、悬念浮现...\n\n📌 第三幕 · 高潮\n矛盾爆发、情感顶点...\n\n📌 第四幕 · 结局\n尘埃落定、主题升华...\n\n━━━━━━━━━━━━━━\n💡 拍摄建议：舒缓→紧凑→抒情，色调随场景切换\n✅ AI 剧本生成完成！`;
+    r.style.display='block';
+    g.innerText='✨ 一键生成剧本';g.disabled=false;
+  },1500)
+};
+s.onclick=()=>{
+  const b=new Blob([c.innerText],{type:'text/plain;charset=utf-8'}),u=URL.createObjectURL(b),a=document.createElement('a');
+  a.href=u;a.download=`${p.value||'AI剧本'}.txt`;a.click();URL.revokeObjectURL(u);alert('✅ 保存成功！')
+}
+</script>
+</body>
+</html>
