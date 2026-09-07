@@ -3,60 +3,225 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI 剧作工作室</title>
+<title>AI 剧作工作室 · 一键出成品</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:"Segoe UI",sans-serif;background:linear-gradient(135deg,#1a1a2e,#16213e);color:#fff;min-height:100vh}
-.container{max-width:800px;margin:0 auto;padding:40px 20px}
-header{text-align:center;margin-bottom:40px}
-header h1{font-size:36px;background:linear-gradient(90deg,#ffd700,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.subtitle{color:#aaa;margin-top:8px}
-.card{background:rgba(255,255,255,.06);border-radius:16px;padding:30px;border:1px solid rgba(255,255,255,.1)}
-label{display:block;margin:20px 0 8px;color:#ffd700;font-weight:600}
+.container{max-width:900px;margin:0 auto;padding:30px 20px}
+header{text-align:center;margin-bottom:30px}
+header h1{font-size:30px;background:linear-gradient(90deg,#ffd700,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.subtitle{color:#aaa;margin-top:6px}
+.card{background:rgba(255,255,255,.06);border-radius:16px;padding:24px;border:1px solid rgba(255,255,255,.1);margin-bottom:20px}
+label{display:block;margin:14px 0 6px;color:#ffd700;font-weight:600}
 input,textarea{width:100%;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(0,0,0,.3);color:#fff;font-size:15px;outline:none}
-input:focus,textarea:focus{border-color:#ffd700}
-button{width:100%;margin-top:24px;padding:14px;font-size:17px;font-weight:bold;border-radius:10px;border:none;background:linear-gradient(90deg,#ffd700,#ff8c00);color:#000;cursor:pointer}
-button:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,200,0,.35)}
-.result-box{margin-top:28px;padding:20px;background:rgba(0,0,0,.35);border-radius:12px;border:1px solid #ffd70050;display:none}
-.result-box h3{color:#ffd700;margin-bottom:12px}
-#resultContent{line-height:1.8;color:#eee;white-space:pre-wrap}
-#saveBtn{background:linear-gradient(90deg,#2ecc71,#27ae60);margin-top:16px}
+button{padding:12px 20px;font-size:15px;font-weight:bold;border-radius:10px;border:none;cursor:pointer;transition:all .2s;margin:5px}
+button:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(255,200,0,.3)}
+button:disabled{opacity:.6;cursor:not-allowed}
+.btn-blue{background:linear-gradient(90deg,#4facfe,#00f2fe);color:#000}
+.btn-gold{background:linear-gradient(90deg,#ffd700,#ff8c00);color:#000}
+.btn-pink{background:linear-gradient(90deg,#fa709a,#fee140);color:#000}
+.btn-green{background:linear-gradient(90deg,#2ecc71,#27ae60);color:#fff}
+.btn-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.result{margin-top:18px;padding:16px;background:rgba(0,0,0,.35);border-radius:12px;border:1px solid rgba(255,200,0,.3);display:none}
+.result h3{color:#ffd700;margin-bottom:10px}
+pre{line-height:1.7;color:#eee;white-space:pre-wrap;word-break:break-all;background:rgba(0,0,0,.25);padding:12px;border-radius:8px;margin:8px 0}
+.media-box{margin-top:12px;min-height:60px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+img,video{max-width:100%;border-radius:8px;margin-top:8px;box-shadow:0 4px 12px rgba(0,0,0,.4)}
+audio{margin-top:8px;width:100%}
+.tip{color:#888;font-size:13px;margin-top:6px;padding-left:4px;border-left:2px solid #ffd70050}
+.copy-btn{padding:6px 12px;font-size:13px;margin:4px 4px 4px 0;background:#444;color:#fff;border-radius:6px}
 </style>
 </head>
 <body>
 <div class="container">
   <header>
-    <h1>🎬 AI 剧作工作室</h1>
-    <p class="subtitle">AI Drama Studio · 智能剧本创作平台</p>
+    <h1>🎬 AI 剧作工作室 · 一键出成品</h1>
+    <p class="subtitle">写剧本 → 出画面 → 做视频 → 配音 → 全在这里！</p>
   </header>
+
+  <!-- 输入区 -->
   <div class="card">
     <label>📝 项目名称</label>
-    <input type="text" id="projectName" placeholder="例如：家庭温情短剧">
-    <label>💡 创作需求</label>
-    <textarea id="prompt" rows="8" placeholder="输入故事设定、人物、风格、集数..."></textarea>
-    <button id="generateBtn">✨ 一键生成剧本</button>
-    <div id="resultBox" class="result-box">
-      <h3>📄 生成结果</h3>
-      <div id="resultContent"></div>
-      <button id="saveBtn">💾 保存到本地</button>
+    <input type="text" id="projName" placeholder="例如：海边小镇的夏天">
+    <label>💡 创作设定</label>
+    <textarea id="setting" rows="4" placeholder="风格：温暖治愈，明亮色调
+人物：小明、小红
+场景：夏日海边，晚霞
+时长：每段约15秒"></textarea>
+  </div>
+
+  <!-- 四大功能按钮 -->
+  <div class="card">
+    <div class="btn-row">
+      <button class="btn-blue" onclick="genScript()">📄 1. 生成剧本</button>
+      <button class="btn-gold" onclick="genImage()">🎨 2. 生成画面提示词</button>
+      <button class="btn-pink" onclick="genVideo()">🎥 3. 生成视频提示词</button>
+      <button class="btn-green" onclick="genVoice()">🎤 4. 生成配音并朗读</button>
     </div>
   </div>
+
+  <!-- 剧本结果 -->
+  <div class="result" id="resScript">
+    <h3>📄 完整剧本</h3>
+    <pre id="txtScript"></pre>
+    <button class="copy-btn" onclick="copy('txtScript')">📋 复制剧本</button>
+    <button class="copy-btn" onclick="save('txtScript','剧本')">💾 保存剧本</button>
+  </div>
+
+  <!-- 画面提示词 + 一键生成 -->
+  <div class="result" id="resImage">
+    <h3>🎨 画面提示词 <span style="color:#888;font-size:13px">→ 一键去AI画图</span></h3>
+    <pre id="txtImage"></pre>
+    <button class="copy-btn" onclick="copy('txtImage')">📋 复制画面词</button>
+    <button class="btn-gold" onclick="openImageAI()">🖼️ 一键打开画图AI</button>
+    <div class="tip">💡 点上面按钮 → 自动打开AI画图网站 → 粘贴 → 直接出图！</div>
+  </div>
+
+  <!-- 视频提示词 + 一键生成 -->
+  <div class="result" id="resVideo">
+    <h3>🎥 视频提示词 <span style="color:#888;font-size:13px">→ 一键去AI做视频</span></h3>
+    <pre id="txtVideo"></pre>
+    <button class="copy-btn" onclick="copy('txtVideo')">📋 复制视频词</button>
+    <button class="btn-pink" onclick="openVideoAI()">🎬 一键打开视频AI</button>
+    <div class="tip">💡 点上面按钮 → 自动打开AI视频网站 → 粘贴 → 直接出视频！</div>
+  </div>
+
+  <!-- 配音朗读 + 下载 -->
+  <div class="result" id="resVoice">
+    <h3>🎤 配音文案 <span style="color:#888;font-size:13px">→ 直接朗读/下载</span></h3>
+    <pre id="txtVoice"></pre>
+    <div class="media-box" id="voicePlayer"></div>
+    <button class="btn-green" onclick="playVoice()">🔊 直接朗读试听</button>
+    <button class="copy-btn" onclick="saveVoice()">💾 保存配音文案</button>
+  </div>
 </div>
+
 <script>
-const g=document.getElementById('generateBtn'),s=document.getElementById('saveBtn'),r=document.getElementById('resultBox'),c=document.getElementById('resultContent'),p=document.getElementById('projectName'),t=document.getElementById('prompt');
-g.onclick=()=>{
-  if(!p.value.trim()||!t.value.trim())return alert('请填写项目名称和需求～');
-  g.innerText='⏳ 生成中...';g.disabled=true;
-  setTimeout(()=>{
-    c.innerText=`【剧本名称】${p.value}\n【创作设定】${t.value}\n\n━━━━━━━━━━━━━━\n📌 第一幕 · 开端\n场景：... 人物：... 剧情：...\n\n📌 第二幕 · 发展\n冲突升级、悬念浮现...\n\n📌 第三幕 · 高潮\n矛盾爆发、情感顶点...\n\n📌 第四幕 · 结局\n尘埃落定、主题升华...\n\n━━━━━━━━━━━━━━\n💡 拍摄建议：舒缓→紧凑→抒情，色调随场景切换\n✅ AI 剧本生成完成！`;
-    r.style.display='block';
-    g.innerText='✨ 一键生成剧本';g.disabled=false;
-  },1500)
-};
-s.onclick=()=>{
-  const b=new Blob([c.innerText],{type:'text/plain;charset=utf-8'}),u=URL.createObjectURL(b),a=document.createElement('a');
-  a.href=u;a.download=`${p.value||'AI剧本'}.txt`;a.click();URL.revokeObjectURL(u);alert('✅ 保存成功！')
+const projName=document.getElementById('projName');
+const setting=document.getElementById('setting');
+
+function chk(){
+  if(!projName.value.trim()||!setting.value.trim()){alert('请先填写「项目名称」和「创作设定」哦～');return false}
+  return true
 }
+function copy(id){navigator.clipboard.writeText(document.getElementById(id).innerText).then(()=>alert('✅ 已复制！直接粘贴即可！'))}
+function save(id,type){
+  const t=document.getElementById(id).innerText;
+  const b=new Blob([t],{type:'text/plain;charset=utf-8'}),u=URL.createObjectURL(b),a=document.createElement('a');
+  a.href=u;a.download=`${projName.value||'作品'}_${type}.txt`;a.click();URL.revokeObjectURL(u);alert(`✅ ${type}已保存！`)
+}
+
+// 1. 生成剧本
+function genScript(){
+  if(!chk())return;
+  document.getElementById('resScript').style.display='block';
+  document.getElementById('txtScript').innerText='⏳ 生成中...';
+  setTimeout(()=>{
+    document.getElementById('txtScript').innerText=`【剧本名称】${projName.value}
+【创作设定】${setting.value}
+
+━━━━━━━━ 第一场 · 开端
+场景：黄昏时分，海边小镇，晚霞漫天
+人物：主角登场
+剧情：交代背景，引出心愿...
+
+━━━━━━━━ 第二场 · 发展
+遇到挑战，共同努力，情谊渐深...
+
+━━━━━━━━ 第三场 · 高潮
+携手面对，心愿达成，情感顶点...
+
+━━━━━━━━ 第四场 · 结局
+雨过天晴，共同成长，展望未来...`;
+  },1200)
+}
+
+// 2. 生成画面提示词 + 一键去AI画图
+function genImage(){
+  if(!chk())return;
+  document.getElementById('resImage').style.display='block';
+  document.getElementById('txtImage').innerText='⏳ 生成中...';
+  setTimeout(()=>{
+    document.getElementById('txtImage').innerText=`【画面提示词 - 直接复制到AI画图】
+主题：${projName.value}
+风格：温暖治愈，电影级画质，柔和光影，8K细腻
+
+镜头1：黄昏海边小镇，金色晚霞，海面波光，微风拂动，全景广角，暖色调，炊烟袅袅
+镜头2：人物走在沙滩，逆光剪影，阳光穿透云层，脚印延伸向远方
+镜头3：山顶云海，光芒穿透，人物携手眺望，金光笼罩，大气磅礴
+镜头4：夕阳渐沉，海面倒影，人物背影，温柔收尾`;
+  },1200)
+}
+function openImageAI(){
+  const txt=document.getElementById('txtImage').innerText;
+  navigator.clipboard.writeText(txt).then(()=>{
+    alert('✅ 提示词已自动复制！\n即将打开AI画图网站 → 直接粘贴即可出图！');
+    window.open('https://bing.com/create','_blank')
+  })
+}
+
+// 3. 生成视频提示词 + 一键去AI做视频
+function genVideo(){
+  if(!chk())return;
+  document.getElementById('resVideo').style.display='block';
+  document.getElementById('txtVideo').innerText='⏳ 生成中...';
+  setTimeout(()=>{
+    document.getElementById('txtVideo').innerText=`【视频提示词 - 直接复制到AI视频】
+主题：${projName.value}
+设定：${setting.value}
+时长：约60秒，4个镜头各约15秒
+
+━━ 镜头1
+画面：黄昏海边，晚霞流动，波光闪烁，微风拂动树叶，镜头缓慢推进
+运镜：全景慢推
+配乐：轻柔钢琴+海浪声
+
+━━ 镜头2
+画面：两人走在沙滩，脚步移动，云层光影变化，背影跟随
+运镜：侧面跟拍
+
+━━ 镜头3
+画面：山顶云海翻涌，阳光穿透光芒，人物携手，光芒渐亮
+运镜：仰拍+环绕推进
+
+━━ 镜头4
+画面：夕阳下沉，海面倒影，人物背影，画面温柔渐暗
+运镜：远景慢拉，渐暗收尾`;
+  },1200)
+}
+function openVideoAI(){
+  const txt=document.getElementById('txtVideo').innerText;
+  navigator.clipboard.writeText(txt).then(()=>{
+    alert('✅ 视频提示词已自动复制！\n即将打开AI视频网站 → 直接粘贴即可生成视频！');
+    window.open('https://klingai.com','_blank')
+  })
+}
+
+// 4. 生成配音文案 + 直接朗读
+function genVoice(){
+  if(!chk())return;
+  document.getElementById('resVoice').style.display='block';
+  document.getElementById('txtVoice').innerText='⏳ 生成中...';
+  setTimeout(()=>{
+    document.getElementById('txtVoice').innerText=`【配音文案】
+在这个海边的小镇上，夏天好像永远都不会结束。风吹过沙滩，也吹来了最美好的相遇...
+
+我们一起走过日落，走过潮起潮落。原来最好的时光，就是有人陪你一起长大。
+
+就算有风雨，只要并肩在一起，就一定能看到最美的风景。因为你在，所以我不怕。
+
+夕阳渐渐沉下去，海面倒映着晚霞。我们的故事，才刚刚开始……`;
+  },1200)
+}
+function playVoice(){
+  const txt=document.getElementById('txtVoice').innerText;
+  if(!txt||txt.includes('⏳')){alert('请先生成配音文案哦～');return}
+  const u=new SpeechSynthesisUtterance(txt);
+  u.lang='zh-CN';u.volume=1;u.rate=0.95;u.pitch=1.05;
+  window.speechSynthesis.speak(u);
+  alert('🔊 正在朗读中... 听到声音了吗？')
+}
+function saveVoice(){save('txtVoice','配音文案')}
 </script>
 </body>
 </html>
